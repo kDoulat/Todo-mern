@@ -2,7 +2,7 @@ const userModel = require("../models/userModel");
 const bcrypt = require("bcryptjs");
 const JWT = require("jsonwebtoken");
 
-//REGISTER
+// REGISTER
 const registerController = async (req, res) => {
   try {
     const { username, email, password } = req.body;
@@ -10,10 +10,10 @@ const registerController = async (req, res) => {
     if (!username || !email || !password) {
       return res.status(500).send({
         success: false,
-        message: "Please Provide All fields",
+        message: "Please Provide All Fields",
       });
     }
-    //check existing user
+    // check exisiting suer
     const existingUser = await userModel.findOne({ email });
     if (existingUser) {
       return res.status(500).send({
@@ -23,7 +23,7 @@ const registerController = async (req, res) => {
     }
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    //save user
+    // save user
     const newUser = new userModel({
       username,
       email,
@@ -33,7 +33,7 @@ const registerController = async (req, res) => {
 
     res.status(201).send({
       success: true,
-      message: "User Registered Successfully",
+      message: "User Register Successfully",
     });
   } catch (error) {
     console.log(error);
@@ -45,8 +45,8 @@ const registerController = async (req, res) => {
   }
 };
 
-// LOGIN
-const loginController = async (req, res) => {
+//LOGIN
+const loginControler = async (req, res) => {
   try {
     const { email, password } = req.body;
     //find user
@@ -55,10 +55,10 @@ const loginController = async (req, res) => {
     if (!user) {
       return res.status(404).send({
         success: false,
-        message: "Invalid Email or password",
+        message: "Invalid Email Or Password",
       });
     }
-    //match Password
+    // match passowrd
     const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(500).send({
@@ -72,7 +72,7 @@ const loginController = async (req, res) => {
     });
     res.status(200).send({
       success: true,
-      message: "Login Successfully",
+      message: "login successfully",
       token,
       user: {
         id: user._id,
@@ -90,4 +90,4 @@ const loginController = async (req, res) => {
   }
 };
 
-module.exports = { registerController, loginController };
+module.exports = { registerController, loginControler };
